@@ -57,9 +57,9 @@ let totalMessages = 0;
  * @returns {boolean} - true si es válido, false si no lo es
  */
 function isValidInput(value) {
-    // TODO: Implementar validación
-    // Pista: usa trim() para eliminar espacios al inicio y final
-    // Retorna true si después de trim() el string tiene longitud > 0
+  // TODO: Implementar validación
+  // Pista: usa trim() para eliminar espacios al inicio y final
+  // Retorna true si después de trim() el string tiene longitud > 0
 }
 
 /**
@@ -68,8 +68,8 @@ function isValidInput(value) {
  * @param {string} message - Mensaje de error a mostrar
  */
 function showError(errorElement, message) {
-    // TODO: Implementar función para mostrar error
-    // Pista: asigna el mensaje al textContent del elemento
+  // TODO: Implementar función para mostrar error
+  // Pista: asigna el mensaje al textContent del elemento
 }
 
 /**
@@ -77,8 +77,8 @@ function showError(errorElement, message) {
  * @param {HTMLElement} errorElement - Elemento del que limpiar el error
  */
 function clearError(errorElement) {
-    // TODO: Implementar función para limpiar error
-    // Pista: asigna un string vacío al textContent
+  // TODO: Implementar función para limpiar error
+  // Pista: asigna un string vacío al textContent
 }
 
 /**
@@ -86,37 +86,37 @@ function clearError(errorElement) {
  * @returns {boolean} - true si todos los campos son válidos, false si alguno no lo es
  */
 function validateForm() {
-    // TODO: Implementar validación completa del formulario
-    // 1. Obtener los valores de los inputs usando .value
-    // 2. Crear una variable para saber si el formulario es válido (inicialmente true)
-    // 3. Validar el campo de nombre de usuario
-    //    - Si no es válido, mostrar error y cambiar la variable a false
-    //    - Si es válido, limpiar el error
-    // 4. Validar el campo de mensaje
-    //    - Si no es válido, mostrar error y cambiar la variable a false
-    //    - Si es válido, limpiar el error
-    // 5. Retornar si el formulario es válido o no
-    
-    // Ejemplo de estructura:
-    /*
-    const userName = userNameInput.value;
-    const userMessage = userMessageInput.value;
-    let isValid = true;
-    
-    // Validar nombre
-    if (!isValidInput(userName)) {
-        // Mostrar error
-        // Agregar clase 'error' al input
-        isValid = false;
-    } else {
-        // Limpiar error
-        // Remover clase 'error' del input
-    }
-    
-    // Validar mensaje (estructura similar)
-    
-    return isValid;
-    */
+  // TODO: Implementar validación completa del formulario
+  // 1. Obtener los valores de los inputs usando .value
+  // 2. Crear una variable para saber si el formulario es válido (inicialmente true)
+  // 3. Validar el campo de nombre de usuario
+  //    - Si no es válido, mostrar error y cambiar la variable a false
+  //    - Si es válido, limpiar el error
+  // 4. Validar el campo de mensaje
+  //    - Si no es válido, mostrar error y cambiar la variable a false
+  //    - Si es válido, limpiar el error
+  // 5. Retornar si el formulario es válido o no
+
+  // Ejemplo de estructura:
+  /*
+  const userName = userNameInput.value;
+  const userMessage = userMessageInput.value;
+  let isValid = true;
+  
+  // Validar nombre
+  if (!isValidInput(userName)) {
+      // Mostrar error
+      // Agregar clase 'error' al input
+      isValid = false;
+  } else {
+      // Limpiar error
+      // Remover clase 'error' del input
+  }
+  
+  // Validar mensaje (estructura similar)
+  
+  return isValid;
+  */
 }
 
 /**
@@ -124,15 +124,15 @@ function validateForm() {
  * @returns {string} - Fecha y hora en formato legible
  */
 function getCurrentTimestamp() {
-    const now = new Date();
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    };
-    return now.toLocaleDateString('es-ES', options);
+  const now = new Date();
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  };
+  return now.toLocaleDateString('es-ES', options);
 }
 
 /**
@@ -141,37 +141,37 @@ function getCurrentTimestamp() {
  * @returns {string} - Iniciales en mayúsculas
  */
 function getInitials(name) {
-    // TODO: Implementar función para obtener iniciales
-    // Pista: 
-    // 1. Separar el nombre por espacios usando split(' ')
-    // 2. Tomar la primera letra de cada palabra
-    // 3. Unirlas y convertirlas a mayúsculas
-    // 4. Si solo hay una palabra, retornar las dos primeras letras
+  // TODO: Implementar función para obtener iniciales
+  // Pista: 
+  // 1. Separar el nombre por espacios usando split(' ')
+  // 2. Tomar la primera letra de cada palabra
+  // 3. Unirlas y convertirlas a mayúsculas
+  // 4. Si solo hay una palabra, retornar las dos primeras letras
 }
 
 /**
  * Actualiza el contador de mensajes
  */
 function updateMessageCount() {
-    // TODO: Implementar actualización del contador
-    // Pista: Usa template literals para crear el texto
-    // Formato: "X mensaje(s)" o "X mensajes"
+  // TODO: Implementar actualización del contador
+  // Pista: Usa template literals para crear el texto
+  // Formato: "X mensaje(s)" o "X mensajes"
 }
 
 /**
  * Oculta el estado vacío (mensaje cuando no hay mensajes)
  */
 function hideEmptyState() {
-    // TODO: Implementar función para ocultar el estado vacío
-    // Pista: Agrega la clase 'hidden' al elemento emptyState
+  // TODO: Implementar función para ocultar el estado vacío
+  // Pista: Agrega la clase 'hidden' al elemento emptyState
 }
 
 /**
  * Muestra el estado vacío (mensaje cuando no hay mensajes)
  */
 function showEmptyState() {
-    // TODO: Implementar función para mostrar el estado vacío
-    // Pista: Remueve la clase 'hidden' del elemento emptyState
+  // TODO: Implementar función para mostrar el estado vacío
+  // Pista: Remueve la clase 'hidden' del elemento emptyState
 }
 
 
@@ -185,34 +185,34 @@ function showEmptyState() {
  * @param {string} message - Contenido del mensaje
  */
 function createMessageElement(userName, message) {
-    // TODO: Implementar la creación de un nuevo mensaje
-    
-    // PASO 1: Crear el contenedor principal del mensaje
-    // Pista: document.createElement('div')
-    // Asignar la clase 'message-card'
-    
-    // PASO 2: Crear la estructura HTML del mensaje
-    // Puedes usar innerHTML con la siguiente estructura:
-    /*
-    <div class="message-card__header">
-        <div class="message-card__user">
-            <div class="message-card__avatar">[INICIALES]</div>
-            <span class="message-card__username">[NOMBRE]</span>
-        </div>
-        <span class="message-card__timestamp">[FECHA]</span>
-    </div>
-    <div class="message-card__content">[MENSAJE]</div>
-    */
-    
-    // PASO 3: Insertar el nuevo elemento en el contenedor de mensajes
-    // Pista: messagesContainer.appendChild(nuevoElemento)
-    // O usar insertBefore para agregarlo al principio
-    
-    // PASO 4: Incrementar el contador de mensajes
-    
-    // PASO 5: Actualizar el contador visual
-    
-    // PASO 6: Ocultar el estado vacío si está visible
+  // TODO: Implementar la creación de un nuevo mensaje
+
+  // PASO 1: Crear el contenedor principal del mensaje
+  // Pista: document.createElement('div')
+  // Asignar la clase 'message-card'
+
+  // PASO 2: Crear la estructura HTML del mensaje
+  // Puedes usar innerHTML con la siguiente estructura:
+  /*
+  <div class="message-card__header">
+      <div class="message-card__user">
+          <div class="message-card__avatar">[INICIALES]</div>
+          <span class="message-card__username">[NOMBRE]</span>
+      </div>
+      <span class="message-card__timestamp">[FECHA]</span>
+  </div>
+  <div class="message-card__content">[MENSAJE]</div>
+  */
+
+  // PASO 3: Insertar el nuevo elemento en el contenedor de mensajes
+  // Pista: messagesContainer.appendChild(nuevoElemento)
+  // O usar insertBefore para agregarlo al principio
+
+  // PASO 4: Incrementar el contador de mensajes
+
+  // PASO 5: Actualizar el contador visual
+
+  // PASO 6: Ocultar el estado vacío si está visible
 }
 
 
@@ -225,35 +225,35 @@ function createMessageElement(userName, message) {
  * @param {Event} event - Evento del formulario
  */
 function handleFormSubmit(event) {
-    // TODO: Implementar el manejador del evento submit
-    
-    // PASO 1: Prevenir el comportamiento por defecto del formulario
-    // Pista: event.preventDefault()
-    
-    // PASO 2: Validar el formulario
-    // Si no es válido, detener la ejecución (return)
-    
-    // PASO 3: Obtener los valores de los campos
-    
-    // PASO 4: Crear el nuevo elemento de mensaje
-    // Llamar a createMessageElement con los valores obtenidos
-    
-    // PASO 5: Limpiar el formulario
-    // Pista: messageForm.reset()
-    
-    // PASO 6: Limpiar los errores
-    
-    // PASO 7: Opcional - Enfocar el primer campo para facilitar agregar otro mensaje
-    // Pista: userNameInput.focus()
+  // TODO: Implementar el manejador del evento submit
+
+  // PASO 1: Prevenir el comportamiento por defecto del formulario
+  // Pista: event.preventDefault()
+
+  // PASO 2: Validar el formulario
+  // Si no es válido, detener la ejecución (return)
+
+  // PASO 3: Obtener los valores de los campos
+
+  // PASO 4: Crear el nuevo elemento de mensaje
+  // Llamar a createMessageElement con los valores obtenidos
+
+  // PASO 5: Limpiar el formulario
+  // Pista: messageForm.reset()
+
+  // PASO 6: Limpiar los errores
+
+  // PASO 7: Opcional - Enfocar el primer campo para facilitar agregar otro mensaje
+  // Pista: userNameInput.focus()
 }
 
 /**
  * Limpia los errores cuando el usuario empieza a escribir
  */
 function handleInputChange() {
-    // TODO: Implementar limpieza de errores al escribir
-    // Esta función se ejecuta cuando el usuario escribe en un campo
-    // Debe limpiar el error de ese campo específico
+  // TODO: Implementar limpieza de errores al escribir
+  // Esta función se ejecuta cuando el usuario escribe en un campo
+  // Debe limpiar el error de ese campo específico
 }
 
 
@@ -304,12 +304,12 @@ function handleInputChange() {
 /**
  * Esta función se ejecuta cuando el DOM está completamente cargado
  */
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ DOM completamente cargado');
-    console.log('📝 Aplicación de registro de mensajes iniciada');
-    
-    // Aquí puedes agregar cualquier inicialización adicional
-    // Por ejemplo, cargar mensajes guardados del localStorage
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('✅ DOM completamente cargado');
+  console.log('📝 Aplicación de registro de mensajes iniciada');
+
+  // Aquí puedes agregar cualquier inicialización adicional
+  // Por ejemplo, cargar mensajes guardados del localStorage
 });
 
 
@@ -329,3 +329,12 @@ document.addEventListener('DOMContentLoaded', function() {
  * 7. Agregar emojis o reacciones a los mensajes
  * 8. Implementar búsqueda/filtrado de mensajes
  */
+
+
+const usuario = document.querySelector("#usuario");
+
+
+usuario.addEventListener('submit', (e) => {
+  e.preventDefault();
+  alert("Ok")
+})
