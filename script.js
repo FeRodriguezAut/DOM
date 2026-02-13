@@ -38,9 +38,9 @@ let usuarioActual = null;
 
 async function buscarUsuario(documento) {
     try {
-        console.log('🔍 Buscando usuario con documento:', documento);
+        console.log(' Buscando usuario con documento:', documento);
         
-        const respuesta = await fetch(`${URL_BASE}/usuarios?documento=${documento}`);
+        const respuesta = await fetch(`${'http://localhost:3000'}/usuarios?documento=${documento}`);
         
         if (!respuesta.ok) {
             throw new Error('Error en la petición al servidor');
@@ -54,11 +54,11 @@ async function buscarUsuario(documento) {
         
         const usuario = usuarios[0];
         
-        console.log('✅ Usuario encontrado:', usuario);
+        console.log(' Usuario encontrado:', usuario);
         return usuario;
         
     } catch (error) {
-        console.error('❌ Error:', error);
+        console.error(' Error:', error);
         alert('No se encontró un usuario con ese documento');
         return null;
     }
@@ -226,5 +226,3 @@ formularioTareas.addEventListener('submit', async function(evento) {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Sistema iniciado');
 });
-
-
