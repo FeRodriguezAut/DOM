@@ -88,25 +88,39 @@
     </form>
   </div>
 </section>
-    <!-- Área de mensajes -->
-    <section class="messages-section">
-      <div class="messages-header">
-        <h2 class="messages-header__title">Mensajes Publicados</h2>
-        <span class="messages-header__count" id="messageCount">0 mensajes</span>
-      </div>
+    <!-- Área de tareas -->
+<section class="messages-section hidden" id="seccionListaTareas">
+  <div class="messages-header">
+    <h2 class="messages-header__title">Tareas del Usuario</h2>
+    <span class="messages-header__count" id="contadorTareas">0 tareas</span>
+  </div>
 
-      <div id="messagesContainer" class="messages-container">
-        <!-- Los mensajes se agregarán aquí dinámicamente -->
-        <div class="messages-empty" id="emptyState">
-          <svg class="messages-empty__icon" width="64" height="64" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-          <p class="messages-empty__text">Aún no hay mensajes</p>
-          <p class="messages-empty__subtext">Completa el formulario para agregar tu primer mensaje</p>
-        </div>
-      </div>
-    </section>
+  <div id="contenedorTabla">
+    <!-- Mensaje cuando no hay tareas -->
+    <div class="messages-empty" id="mensajeSinTareas">
+      <svg class="messages-empty__icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M9 11l3 3L22 4"></path>
+        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+      </svg>
+      <p class="messages-empty__text">No hay tareas registradas</p>
+      <p class="messages-empty__subtext">Agrega la primera tarea usando el formulario de arriba</p>
+    </div>
+
+    <!-- Tabla de tareas -->
+    <table id="tablaTareas" class="tabla-tareas hidden">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpoTabla">
+        <!-- Las filas se agregan aquí dinámicamente -->
+      </tbody>
+    </table>
+  </div>
+</section>
 
     <!-- Footer informativo -->
     <footer class="footer">

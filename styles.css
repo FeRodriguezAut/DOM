@@ -507,3 +507,78 @@ body {
         transform: scale(0.95);
     }
 }
+
+/* ============================================
+   TABLA DE TAREAS
+   ============================================ */
+
+.tabla-tareas {
+    width: 100%;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border-collapse: collapse;
+}
+
+.tabla-tareas thead {
+    background: var(--color-primary);
+    color: white;
+}
+
+.tabla-tareas th {
+    padding: var(--spacing-md) var(--spacing-lg);
+    text-align: left;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tabla-tareas tbody tr {
+    border-bottom: 1px solid var(--color-gray-200);
+    transition: background-color var(--transition-fast);
+}
+
+.tabla-tareas tbody tr:last-child {
+    border-bottom: none;
+}
+
+.tabla-tareas tbody tr:hover {
+    background-color: var(--color-gray-50);
+}
+
+.tabla-tareas td {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+}
+
+.tabla-tareas td:first-child {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.estado-badge {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    text-transform: capitalize;
+}
+
+.estado-pendiente {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.estado-en_proceso {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.estado-completada {
+    background-color: #d1fae5;
+    color: #065f46;
+}

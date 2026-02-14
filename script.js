@@ -29,6 +29,16 @@ const inputTitulo = document.getElementById('tituloTarea');
 const inputDescripcion = document.getElementById('descripcionTarea');
 const selectEstado = document.getElementById('estadoTarea');
 
+// ============================================
+// ELEMENTOS DEL DOM - Tabla de tareas
+// ============================================
+
+const seccionListaTareas = document.getElementById('seccionListaTareas');
+const tablaTareas = document.getElementById('tablaTareas');
+const cuerpoTabla = document.getElementById('cuerpoTabla');
+const mensajeSinTareas = document.getElementById('mensajeSinTareas');
+const contadorTareas = document.getElementById('contadorTareas');
+
 // Variable para guardar el usuario actual
 let usuarioActual = null;
 
@@ -38,9 +48,9 @@ let usuarioActual = null;
 
 async function buscarUsuario(documento) {
     try {
-        console.log(' Buscando usuario con documento:', documento);
+        console.log('🔍 Buscando usuario con documento:', documento);
         
-        const respuesta = await fetch(`${'http://localhost:3000'}/usuarios?documento=${documento}`);
+        const respuesta = await fetch(`${URL_BASE}/usuarios?documento=${documento}`);
         
         if (!respuesta.ok) {
             throw new Error('Error en la petición al servidor');
@@ -54,11 +64,11 @@ async function buscarUsuario(documento) {
         
         const usuario = usuarios[0];
         
-        console.log(' Usuario encontrado:', usuario);
+        console.log('✅ Usuario encontrado:', usuario);
         return usuario;
         
     } catch (error) {
-        console.error(' Error:', error);
+        console.error('❌ Error:', error);
         alert('No se encontró un usuario con ese documento');
         return null;
     }
@@ -93,6 +103,7 @@ function mostrarDatosUsuario(usuario) {
 function ocultarDatosUsuario() {
     datosUsuario.classList.add('hidden');
     seccionTareas.classList.add('hidden');
+    seccionListaTareas.classList.add('hidden');
     usuarioActual = null;
 }
 
@@ -101,12 +112,10 @@ function ocultarDatosUsuario() {
 // ============================================
 
 function validarFormularioTareas() {
-    // Obtenemos los valores de los campos
     const titulo = inputTitulo.value.trim();
     const descripcion = inputDescripcion.value.trim();
     const estado = selectEstado.value;
     
-    // Verificamos que ningún campo esté vacío
     if (titulo === '') {
         alert('Por favor ingresa el título de la tarea');
         return false;
@@ -122,19 +131,17 @@ function validarFormularioTareas() {
         return false;
     }
     
-    // Si llegamos aquí, todos los campos están llenos
     return true;
 }
 
 // ============================================
-// FUNCIONES PARA REGISTRAR TAREAS
+// FUNCIONES PARA TAREAS
 // ============================================
 
 async function registrarTarea(tarea) {
     try {
         console.log('📝 Registrando tarea:', tarea);
         
-        // Enviamos la tarea al servidor usando POST
         const respuesta = await fetch(`${URL_BASE}/tareas`, {
             method: 'POST',
             headers: {
@@ -147,7 +154,6 @@ async function registrarTarea(tarea) {
             throw new Error('Error al registrar la tarea');
         }
         
-        // Obtenemos la tarea creada con su ID
         const tareaCreada = await respuesta.json();
         
         console.log('✅ Tarea registrada exitosamente:', tareaCreada);
@@ -158,6 +164,67 @@ async function registrarTarea(tarea) {
         alert('Hubo un error al registrar la tarea. Intenta nuevamente.');
         return null;
     }
+}
+
+async function cargarTareasUsuario(documento) {
+    try {
+        console.log('📋 Cargando tareas del usuario:', documento);
+        
+        const respuesta = await fetch(`${URL_BASE}/tareas?documento=${documento}`);
+        
+        if (!respuesta.ok) {
+            throw new Error('Error al cargar tareas');
+        }
+        
+        const tareas = await respuesta.json();
+        
+        console.log('✅ Tareas cargadas:', tareas);
+        return tareas;
+        
+    } catch (error) {
+        console.error('❌ Error al cargar tareas:', error);
+        return [];
+    }
+}
+
+function mostrarTareasEnTabla(tareas) {
+    // Limpiamos el cuerpo de la tabla
+    cuerpoTabla.innerHTML = '';
+    
+    // Actualizamos el contador
+    const cantidad = tareas.length;
+    contadorTareas.textContent = `${cantidad} ${cantidad === 1 ? 'tarea' : 'tareas'}`;
+    
+    // Si no hay tareas, mostramos el mensaje y ocultamos la tabla
+    if (tareas.length === 0) {
+        mensajeSinTareas.classList.remove('hidden');
+        tablaTareas.classList.add('hidden');
+        return;
+    }
+    
+    // Ocultamos el mensaje y mostramos la tabla
+    mensajeSinTareas.classList.add('hidden');
+    tablaTareas.classList.remove('hidden');
+    
+    // Creamos una fila para cada tarea
+    tareas.forEach(tarea => {
+        const fila = document.createElement('tr');
+        
+        fila.innerHTML = `
+            <td>${tarea.titulo}</td>
+            <td>${tarea.descripcion}</td>
+            <td>
+                <span class="estado-badge estado-${tarea.estado}">
+                    ${tarea.estado.replace('_', ' ')}
+                </span>
+            </td>
+        `;
+        
+        cuerpoTabla.appendChild(fila);
+    });
+    
+    // Mostramos la sección de lista de tareas
+    seccionListaTareas.classList.remove('hidden');
 }
 
 // ============================================
@@ -181,6 +248,10 @@ formularioBusqueda.addEventListener('submit', async function(evento) {
     if (usuarioEncontrado) {
         usuarioActual = usuarioEncontrado;
         mostrarDatosUsuario(usuarioEncontrado);
+        
+        // Cargamos las tareas del usuario
+        const tareas = await cargarTareasUsuario(usuarioEncontrado.documento);
+        mostrarTareasEnTabla(tareas);
     }
 });
 
@@ -191,12 +262,10 @@ formularioBusqueda.addEventListener('submit', async function(evento) {
 formularioTareas.addEventListener('submit', async function(evento) {
     evento.preventDefault();
     
-    // Validamos que todos los campos estén llenos
     if (!validarFormularioTareas()) {
         return;
     }
     
-    // Creamos el objeto con los datos de la tarea
     const nuevaTarea = {
         documento: usuarioActual.documento,
         titulo: inputTitulo.value.trim(),
@@ -204,17 +273,11 @@ formularioTareas.addEventListener('submit', async function(evento) {
         estado: selectEstado.value
     };
     
-    // Registramos la tarea en el servidor
     const tareaRegistrada = await registrarTarea(nuevaTarea);
     
     if (tareaRegistrada) {
-        // Mostramos mensaje de éxito
         alert('¡Tarea registrada exitosamente!');
-        
-        // Limpiamos el formulario
         formularioTareas.reset();
-        
-        // Enfocamos el primer campo para agregar otra tarea fácilmente
         inputTitulo.focus();
     }
 });
