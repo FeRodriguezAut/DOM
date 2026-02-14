@@ -28,6 +28,12 @@ const formularioTareas = document.getElementById('formularioTareas');
 const inputTitulo = document.getElementById('tituloTarea');
 const inputDescripcion = document.getElementById('descripcionTarea');
 const selectEstado = document.getElementById('estadoTarea');
+const btnAgregarTarea = document.getElementById('btnAgregarTarea');
+
+// Elementos de error
+const errorTitulo = document.getElementById('errorTitulo');
+const errorDescripcion = document.getElementById('errorDescripcion');
+const errorEstado = document.getElementById('errorEstado');
 
 // ============================================
 // ELEMENTOS DEL DOM - Tabla de tareas
@@ -41,6 +47,9 @@ const contadorTareas = document.getElementById('contadorTareas');
 
 // Variable para guardar el usuario actual
 let usuarioActual = null;
+
+// Variable para guardar las tareas actuales
+let tareasActuales = [];
 
 // ============================================
 // FUNCIONES DE BÚSQUEDA
@@ -69,7 +78,7 @@ async function buscarUsuario(documento) {
         
     } catch (error) {
         console.error('❌ Error:', error);
-        alert('No se encontró un usuario con ese documento');
+        mostrarMensajeError('No se encontró un usuario con ese documento');
         return null;
     }
 }
@@ -105,33 +114,61 @@ function ocultarDatosUsuario() {
     seccionTareas.classList.add('hidden');
     seccionListaTareas.classList.add('hidden');
     usuarioActual = null;
+    tareasActuales = [];
+    
+    // Limpiamos el formulario de tareas
+    formularioTareas.reset();
+    limpiarErrores();
 }
 
 // ============================================
 // FUNCIONES PARA VALIDAR FORMULARIO DE TAREAS
 // ============================================
 
+function mostrarError(elemento, mensaje) {
+    elemento.textContent = mensaje;
+    elemento.previousElementSibling.classList.add('error');
+}
+
+function limpiarError(elemento) {
+    elemento.textContent = '';
+    elemento.previousElementSibling.classList.remove('error');
+}
+
+function limpiarErrores() {
+    limpiarError(errorTitulo);
+    limpiarError(errorDescripcion);
+    limpiarError(errorEstado);
+}
+
 function validarFormularioTareas() {
+    // Limpiamos errores anteriores
+    limpiarErrores();
+    
+    let esValido = true;
+    
+    // Validamos título
     const titulo = inputTitulo.value.trim();
-    const descripcion = inputDescripcion.value.trim();
-    const estado = selectEstado.value;
-    
     if (titulo === '') {
-        alert('Por favor ingresa el título de la tarea');
-        return false;
+        mostrarError(errorTitulo, 'El título es obligatorio');
+        esValido = false;
     }
     
+    // Validamos descripción
+    const descripcion = inputDescripcion.value.trim();
     if (descripcion === '') {
-        alert('Por favor ingresa la descripción de la tarea');
-        return false;
+        mostrarError(errorDescripcion, 'La descripción es obligatoria');
+        esValido = false;
     }
     
+    // Validamos estado
+    const estado = selectEstado.value;
     if (estado === '') {
-        alert('Por favor selecciona el estado de la tarea');
-        return false;
+        mostrarError(errorEstado, 'Debes seleccionar un estado');
+        esValido = false;
     }
     
-    return true;
+    return esValido;
 }
 
 // ============================================
@@ -141,6 +178,10 @@ function validarFormularioTareas() {
 async function registrarTarea(tarea) {
     try {
         console.log('📝 Registrando tarea:', tarea);
+        
+        // Deshabilitamos el botón mientras se procesa
+        btnAgregarTarea.disabled = true;
+        btnAgregarTarea.textContent = 'Guardando...';
         
         const respuesta = await fetch(`${URL_BASE}/tareas`, {
             method: 'POST',
@@ -161,8 +202,12 @@ async function registrarTarea(tarea) {
         
     } catch (error) {
         console.error('❌ Error al registrar tarea:', error);
-        alert('Hubo un error al registrar la tarea. Intenta nuevamente.');
+        mostrarMensajeError('Hubo un error al registrar la tarea. Intenta nuevamente.');
         return null;
+    } finally {
+        // Rehabilitamos el botón
+        btnAgregarTarea.disabled = false;
+        btnAgregarTarea.innerHTML = '<span class="btn__text">Agregar Tarea</span><span class="btn__icon">➕</span>';
     }
 }
 
@@ -183,7 +228,39 @@ async function cargarTareasUsuario(documento) {
         
     } catch (error) {
         console.error('❌ Error al cargar tareas:', error);
+        mostrarMensajeError('No se pudieron cargar las tareas del usuario');
         return [];
+    }
+}
+
+function agregarTareaATabla(tarea) {
+    // Creamos una nueva fila
+    const fila = document.createElement('tr');
+    
+    fila.innerHTML = `
+        <td>${tarea.titulo}</td>
+        <td>${tarea.descripcion}</td>
+        <td>
+            <span class="estado-badge estado-${tarea.estado}">
+                ${tarea.estado.replace('_', ' ')}
+            </span>
+        </td>
+    `;
+    
+    // Agregamos la fila al inicio de la tabla
+    cuerpoTabla.insertBefore(fila, cuerpoTabla.firstChild);
+    
+    // Actualizamos el array de tareas actuales
+    tareasActuales.unshift(tarea);
+    
+    // Actualizamos el contador
+    actualizarContador();
+    
+    // Si la tabla estaba oculta, la mostramos
+    if (tablaTareas.classList.contains('hidden')) {
+        mensajeSinTareas.classList.add('hidden');
+        tablaTareas.classList.remove('hidden');
+        seccionListaTareas.classList.remove('hidden');
     }
 }
 
@@ -191,9 +268,11 @@ function mostrarTareasEnTabla(tareas) {
     // Limpiamos el cuerpo de la tabla
     cuerpoTabla.innerHTML = '';
     
+    // Guardamos las tareas en la variable global
+    tareasActuales = tareas;
+    
     // Actualizamos el contador
-    const cantidad = tareas.length;
-    contadorTareas.textContent = `${cantidad} ${cantidad === 1 ? 'tarea' : 'tareas'}`;
+    actualizarContador();
     
     // Si no hay tareas, mostramos el mensaje y ocultamos la tabla
     if (tareas.length === 0) {
@@ -227,6 +306,57 @@ function mostrarTareasEnTabla(tareas) {
     seccionListaTareas.classList.remove('hidden');
 }
 
+function actualizarContador() {
+    const cantidad = tareasActuales.length;
+    contadorTareas.textContent = `${cantidad} ${cantidad === 1 ? 'tarea' : 'tareas'}`;
+}
+
+// ============================================
+// FUNCIONES PARA MENSAJES
+// ============================================
+
+function mostrarMensajeExito(texto = '✅ Tarea registrada exitosamente') {
+    mostrarNotificacion(texto, 'success');
+}
+
+function mostrarMensajeError(texto) {
+    mostrarNotificacion(texto, 'error');
+}
+
+function mostrarNotificacion(texto, tipo) {
+    // Creamos un elemento temporal para el mensaje
+    const mensaje = document.createElement('div');
+    mensaje.textContent = texto;
+    
+    const colorFondo = tipo === 'success' ? '#10b981' : '#ef4444';
+    
+    mensaje.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: ${colorFondo};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        animation: slideIn 0.3s ease-out;
+        max-width: 300px;
+    `;
+    
+    document.body.appendChild(mensaje);
+    
+    // Removemos el mensaje después de 3 segundos
+    setTimeout(() => {
+        mensaje.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => {
+            if (document.body.contains(mensaje)) {
+                document.body.removeChild(mensaje);
+            }
+        }, 300);
+    }, 3000);
+}
+
 // ============================================
 // EVENTO DE BÚSQUEDA
 // ============================================
@@ -237,7 +367,7 @@ formularioBusqueda.addEventListener('submit', async function(evento) {
     const documento = inputDocumento.value.trim();
     
     if (documento === '') {
-        alert('Por favor ingresa un documento');
+        mostrarMensajeError('Por favor ingresa un documento');
         return;
     }
     
@@ -276,9 +406,38 @@ formularioTareas.addEventListener('submit', async function(evento) {
     const tareaRegistrada = await registrarTarea(nuevaTarea);
     
     if (tareaRegistrada) {
-        alert('¡Tarea registrada exitosamente!');
+        // Mostramos mensaje de éxito
+        mostrarMensajeExito();
+        
+        // Agregamos la tarea a la tabla inmediatamente
+        agregarTareaATabla(tareaRegistrada);
+        
+        // Limpiamos el formulario
         formularioTareas.reset();
+        limpiarErrores();
         inputTitulo.focus();
+    }
+});
+
+// ============================================
+// LIMPIAR ERRORES AL ESCRIBIR
+// ============================================
+
+inputTitulo.addEventListener('input', function() {
+    if (this.value.trim() !== '') {
+        limpiarError(errorTitulo);
+    }
+});
+
+inputDescripcion.addEventListener('input', function() {
+    if (this.value.trim() !== '') {
+        limpiarError(errorDescripcion);
+    }
+});
+
+selectEstado.addEventListener('change', function() {
+    if (this.value !== '') {
+        limpiarError(errorEstado);
     }
 });
 
@@ -287,5 +446,6 @@ formularioTareas.addEventListener('submit', async function(evento) {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Sistema iniciado');
+    console.log('✅ Sistema iniciado y listo para usar');
+    console.log('🔧 Versión final del proyecto');
 });

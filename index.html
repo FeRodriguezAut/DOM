@@ -50,7 +50,7 @@
   <div class="card">
     <h2 class="card__title">Registrar Nueva Tarea</h2>
     
-    <form id="formularioTareas" class="form">
+    <form id="formularioTareas" class="form" novalidate>
       <div class="form__group">
         <label for="tituloTarea" class="form__label">Título de la tarea</label>
         <input 
@@ -59,6 +59,7 @@
           class="form__input" 
           placeholder="Ej: Completar informe"
           required>
+        <span class="form__error" id="errorTitulo"></span>
       </div>
 
       <div class="form__group">
@@ -69,6 +70,7 @@
           placeholder="Describe la tarea..."
           rows="3"
           required></textarea>
+        <span class="form__error" id="errorDescripcion"></span>
       </div>
 
       <div class="form__group">
@@ -79,9 +81,10 @@
           <option value="en_proceso">En Proceso</option>
           <option value="completada">Completada</option>
         </select>
+        <span class="form__error" id="errorEstado"></span>
       </div>
 
-      <button type="submit" class="btn btn--primary">
+      <button type="submit" class="btn btn--primary" id="btnAgregarTarea">
         <span class="btn__text">Agregar Tarea</span>
         <span class="btn__icon">➕</span>
       </button>
