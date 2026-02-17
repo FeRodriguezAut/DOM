@@ -234,8 +234,10 @@ async function cargarTareasUsuario(documento) {
 }
 
 function agregarTareaATabla(tarea) {
-    // Creamos una nueva fila
     const fila = document.createElement('tr');
+    
+    // Guardamos el ID en la fila
+    fila.dataset.tareaId = tarea.id;
     
     fila.innerHTML = `
         <td>${tarea.titulo}</td>
@@ -244,6 +246,13 @@ function agregarTareaATabla(tarea) {
             <span class="estado-badge estado-${tarea.estado}">
                 ${tarea.estado.replace('_', ' ')}
             </span>
+        </td>
+        <td>
+            <div class="acciones">
+                <button class="btn-accion btn-eliminar" onclick="eliminarTarea(${tarea.id})">
+                    🗑️ Eliminar
+                </button>
+            </div>
         </td>
     `;
     
@@ -287,20 +296,30 @@ function mostrarTareasEnTabla(tareas) {
     
     // Creamos una fila para cada tarea
     tareas.forEach(tarea => {
-        const fila = document.createElement('tr');
-        
-        fila.innerHTML = `
-            <td>${tarea.titulo}</td>
-            <td>${tarea.descripcion}</td>
-            <td>
-                <span class="estado-badge estado-${tarea.estado}">
-                    ${tarea.estado.replace('_', ' ')}
-                </span>
-            </td>
-        `;
-        
-        cuerpoTabla.appendChild(fila);
-    });
+    const fila = document.createElement('tr');
+    
+    // Guardamos el ID de la tarea en un atributo data
+    fila.dataset.tareaId = tarea.id;
+    
+    fila.innerHTML = `
+        <td>${tarea.titulo}</td>
+        <td>${tarea.descripcion}</td>
+        <td>
+            <span class="estado-badge estado-${tarea.estado}">
+                ${tarea.estado.replace('_', ' ')}
+            </span>
+        </td>
+        <td>
+            <div class="acciones">
+                <button class="btn-accion btn-eliminar" onclick="eliminarTarea(${tarea.id})">
+                    🗑️ Eliminar
+                </button>
+            </div>
+        </td>
+    `;
+    
+    cuerpoTabla.appendChild(fila);
+});
     
     // Mostramos la sección de lista de tareas
     seccionListaTareas.classList.remove('hidden');
@@ -310,6 +329,88 @@ function actualizarContador() {
     const cantidad = tareasActuales.length;
     contadorTareas.textContent = `${cantidad} ${cantidad === 1 ? 'tarea' : 'tareas'}`;
 }
+
+// ============================================
+
+/**
+ * Elimina una tarea del servidor y actualiza la tabla
+ * @param {number} id - ID de la tarea a eliminar
+ */
+async function eliminarTarea(id) {
+    try {
+        // Confirmación antes de eliminar
+        const confirmar = confirm('¿Estás seguro de que deseas eliminar esta tarea?');
+        
+        if (!confirmar) {
+            // Si el usuario cancela, no hacemos nada
+            return;
+        }
+        
+        console.log('🗑️ Eliminando tarea con ID:', id);
+        
+        // Enviamos petición DELETE al servidor
+        const respuesta = await fetch(`${URL_BASE}/tareas/${id}`, {
+            method: 'DELETE'
+        });
+        
+        if (!respuesta.ok) {
+            throw new Error('Error al eliminar la tarea');
+        }
+        
+        console.log('✅ Tarea eliminada exitosamente');
+        
+        // Mostramos mensaje de éxito
+        mostrarMensajeExito('Tarea eliminada exitosamente');
+        
+        // Actualizamos la tabla
+        // Opción 1: Remover solo la fila eliminada (más eficiente)
+        removerFilaDeTarea(id);
+        
+        // Opción 2: Recargar todas las tareas (más seguro)
+        // const tareas = await cargarTareasUsuario(usuarioActual.documento);
+        // mostrarTareasEnTabla(tareas);
+        
+    } catch (error) {
+        console.error('❌ Error al eliminar tarea:', error);
+        mostrarMensajeError('No se pudo eliminar la tarea. Intenta nuevamente.');
+    }
+}
+
+
+// ============================================
+
+/**
+ * Remueve visualmente una fila de la tabla
+ * @param {number} id - ID de la tarea cuya fila se debe remover
+ */
+function removerFilaDeTarea(id) {
+    // Buscamos la fila que tiene ese ID en su atributo data
+    const fila = document.querySelector(`tr[data-tarea-id="${id}"]`);
+    
+    if (fila) {
+        // Agregamos animación de salida
+        fila.style.animation = 'fadeOut 0.3s ease-out';
+        
+        // Después de la animación, removemos del DOM
+        setTimeout(() => {
+            fila.remove();
+            
+            // Actualizamos el array de tareas actuales
+            tareasActuales = tareasActuales.filter(tarea => tarea.id !== id);
+            
+            // Actualizamos el contador
+            actualizarContador();
+            
+            // Si no quedan tareas, mostramos el mensaje vacío
+            if (tareasActuales.length === 0) {
+                mensajeSinTareas.classList.remove('hidden');
+                tablaTareas.classList.add('hidden');
+            }
+        }, 300);
+    }
+}
+
+
 
 // ============================================
 // FUNCIONES PARA MENSAJES
@@ -384,6 +485,7 @@ formularioBusqueda.addEventListener('submit', async function(evento) {
         mostrarTareasEnTabla(tareas);
     }
 });
+
 
 // ============================================
 // EVENTO DE REGISTRO DE TAREAS
