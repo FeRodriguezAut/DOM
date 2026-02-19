@@ -132,6 +132,57 @@
     </footer>
   </div>
 
+<!-- Modal para editar tarea -->
+<div id="modalEditar" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Editar Tarea</h3>
+      <button class="modal-close" onclick="cerrarModalEditar()">✕</button>
+    </div>
+    
+    <form id="formEditar" class="form">
+      <input type="hidden" id="editarTareaId">
+      
+      <div class="form__group">
+        <label for="editarTitulo" class="form__label">Título</label>
+        <input 
+          type="text" 
+          id="editarTitulo" 
+          class="form__input" 
+          required>
+      </div>
+
+      <div class="form__group">
+        <label for="editarDescripcion" class="form__label">Descripción</label>
+        <textarea 
+          id="editarDescripcion" 
+          class="form__input form__textarea" 
+          rows="3"
+          required></textarea>
+      </div>
+
+      <div class="form__group">
+        <label for="editarEstado" class="form__label">Estado</label>
+        <select id="editarEstado" class="form__input" required>
+          <option value="pendiente">Pendiente</option>
+          <option value="en_proceso">En Proceso</option>
+          <option value="completada">Completada</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="cerrarModalEditar()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn--primary">
+          <span class="btn__text">Guardar Cambios</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
   <script src="script.js"></script>
 </body>
 
